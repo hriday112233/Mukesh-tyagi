@@ -1,0 +1,9 @@
+{
+  "name": "Remix: Architex AI - Pro Design Suite",
+  "description": "All-in-one architectural \u0026 interior design platform for trainees and pros. Features AI layout optimization, 3D visualization, municipal compliance (15 Indian languages), regional unit support, and material estimation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

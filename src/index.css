@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-brand-primary: #10b981;
+  --color-brand-secondary: #3b82f6;
+  --color-brand-accent: #f59e0b;
+}
+
+@layer base {
+  .markdown-body {
+    @apply text-zinc-300 leading-relaxed;
+  }
+  .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+    @apply text-zinc-100 font-bold mt-4 mb-2;
+  }
+  .markdown-body p {
+    @apply mb-3;
+  }
+  .markdown-body ul {
+    @apply list-disc pl-5 mb-3;
+  }
+  .markdown-body ol {
+    @apply list-decimal pl-5 mb-3;
+  }
+  .markdown-body code {
+    @apply bg-zinc-800 px-1 rounded text-emerald-400;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-blue-600;
+  }
+  
+  .gradient-border {
+    @apply border-2 border-transparent bg-origin-border bg-clip-content bg-gradient-to-r from-emerald-500 to-blue-600;
+  }
+  
+  .vibrant-shadow {
+    @apply shadow-2xl shadow-emerald-500/10;
+  }
+}
