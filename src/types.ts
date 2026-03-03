@@ -37,3 +37,26 @@ export interface RoomStandard {
   analysis: string;
   keyConsiderations: string[];
 }
+
+export interface CatalogItem {
+  id: string;
+  name: string;
+  category: 'flooring' | 'paint' | 'wallpaper' | 'furniture' | 'lighting' | 'decorative' | 'plumbing' | 'scenery';
+  type: string;
+  style: 'modern' | 'minimalist' | 'bohemian' | 'industrial' | 'scandinavian' | 'classic';
+  application: string[];
+  specifications: { [key: string]: string };
+  price: number;
+  unit: string;
+  brand: string;
+  imageUrl: string;
+  supplierUrl: string;
+  isPro?: boolean;
+}
+
+export type SubscriptionTier = 'free' | 'pro';
+
+export interface UserSubscription {
+  tier: SubscriptionTier;
+  expiresAt?: string;
+}

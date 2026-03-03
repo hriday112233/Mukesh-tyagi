@@ -4,7 +4,11 @@ import Markdown from 'react-markdown';
 import { Send, Sparkles, Loader2, User, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const getAI = () => {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY is not defined");
+  return new GoogleGenAI({ apiKey: key });
+};
 
 interface Message {
   role: 'user' | 'assistant';
@@ -42,6 +46,7 @@ export const AIAssistant: React.FC = () => {
     setIsLoading(true);
 
     try {
+      const ai = getAI();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: userMessage,

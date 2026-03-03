@@ -36,25 +36,31 @@ const TUTORIAL_STEPS = [
   },
   {
     title: 'AI Layout Optimizer',
-    desc: 'Let AI suggest the most efficient furniture arrangements and spatial flows for your rooms.',
+    desc: 'Let AI suggest the most efficient furniture arrangements and spatial flows for your rooms. (Pro Feature)',
     icon: Wand2,
     color: 'bg-purple-500 text-white'
   },
   {
     title: 'Municipal Compliance',
-    desc: 'Check local building bylaws (FSI, setbacks) in 15 Indian languages based on your city.',
+    desc: 'Check local building bylaws (FSI, setbacks) in 15 Indian languages based on your city. (Pro Feature)',
     icon: ShieldCheck,
     color: 'bg-emerald-500 text-white'
   },
   {
     title: 'Material Estimation',
-    desc: 'Get preliminary estimates for paint, tiles, and labor costs based on your drafted area.',
+    desc: 'Get preliminary estimates for paint, tiles, and labor costs based on your drafted area. (Pro Feature)',
     icon: Calculator,
     color: 'bg-amber-500 text-white'
   },
   {
+    title: 'Material Catalog',
+    desc: 'Browse an extensive database of furniture, flooring, and decorative items with AI-powered search. (Pro Feature)',
+    icon: Layers,
+    color: 'bg-emerald-500 text-white'
+  },
+  {
     title: 'Trend Analysis',
-    desc: 'Analyze your design against 2025-2026 architectural trends and sustainability scores.',
+    desc: 'Analyze your design against 2025-2026 architectural trends and sustainability scores. (Pro Feature)',
     icon: TrendingUp,
     color: 'bg-rose-500 text-white'
   }

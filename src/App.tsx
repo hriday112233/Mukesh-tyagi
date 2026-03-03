@@ -9,7 +9,9 @@ import { TrendAnalysis } from './components/TrendAnalysis';
 import { MunicipalCompliance } from './components/MunicipalCompliance';
 import { TraineeGuide } from './components/TraineeGuide';
 import { MaterialEstimator } from './components/MaterialEstimator';
+import { MaterialCatalog } from './components/MaterialCatalog';
 import { TutorialOverlay } from './components/TutorialOverlay';
+import { SubscriptionModal, ProGatedFeature } from './components/SubscriptionModal';
 import { UI_TRANSLATIONS } from './translations';
 import { Room, ProjectRequirement } from './types';
 import { 
@@ -29,7 +31,8 @@ import {
   BookOpen,
   TrendingUp,
   ShieldCheck,
-  Calculator
+  Calculator,
+  Crown
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion, AnimatePresence } from 'motion/react';
@@ -41,7 +44,9 @@ const INITIAL_REQUIREMENTS: ProjectRequirement[] = [
 ];
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'layout' | 'requirements' | 'trends' | 'ai-layout' | 'standards' | 'trend-analysis' | 'compliance' | 'material-estimator'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'layout' | 'requirements' | 'trends' | 'ai-layout' | 'standards' | 'trend-analysis' | 'compliance' | 'material-estimator' | 'catalog'>('dashboard');
+  const [isPro, setIsPro] = useState(false);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [requirements, setRequirements] = useState<ProjectRequirement[]>(INITIAL_REQUIREMENTS);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -102,6 +107,7 @@ export default function App() {
             { id: 'trend-analysis', icon: TrendingUp, label: t('trendAnalysis'), color: 'text-rose-400' },
             { id: 'compliance', icon: ShieldCheck, label: t('compliance'), color: 'text-cyan-400' },
             { id: 'material-estimator', icon: Calculator, label: t('materialEstimator'), color: 'text-orange-400' },
+            { id: 'catalog', icon: Layers, label: 'Catalog', color: 'text-emerald-500' },
             { id: 'requirements', icon: ClipboardList, label: t('requirements'), color: 'text-indigo-400' },
             { id: 'trends', icon: Palette, label: t('trends'), color: 'text-pink-400' },
           ].map((item) => (
@@ -116,10 +122,30 @@ export default function App() {
             >
               <item.icon size={20} className={activeTab === item.id ? item.color : 'text-zinc-500 group-hover:text-zinc-300'} />
               {isSidebarOpen && <span className="font-bold text-sm tracking-tight">{item.label}</span>}
+              {isSidebarOpen && !isPro && ['ai-layout', 'trend-analysis', 'compliance', 'material-estimator', 'catalog'].includes(item.id) && (
+                <Crown size={12} className="ml-auto text-amber-500" />
+              )}
               {isSidebarOpen && activeTab === item.id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />}
             </button>
           ))}
         </nav>
+
+        {!isPro && isSidebarOpen && (
+          <div className="px-4 py-6">
+            <button 
+              onClick={() => setIsSubscriptionModalOpen(true)}
+              className="w-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white p-4 rounded-2xl shadow-lg shadow-emerald-500/20 group relative overflow-hidden"
+            >
+              <div className="relative z-10">
+                <p className="text-[10px] font-black uppercase tracking-widest mb-1 opacity-80">Upgrade Now</p>
+                <p className="text-xs font-bold flex items-center justify-center gap-2">
+                  Unlock Pro <Crown size={14} />
+                </p>
+              </div>
+              <div className="absolute top-0 left-0 w-full h-full bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            </button>
+          </div>
+        )}
 
         <div className="p-4 border-t border-zinc-800 space-y-1">
           <button 
@@ -174,10 +200,12 @@ export default function App() {
             <div className="h-8 w-px bg-zinc-200"></div>
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-black text-zinc-900 tracking-tight">Pro Architect</p>
-                <p className="text-[10px] text-emerald-600 font-black uppercase tracking-widest">Premium Suite</p>
+                <p className="text-sm font-black text-zinc-900 tracking-tight">{isPro ? 'Pro Architect' : 'Basic User'}</p>
+                <p className={`text-[10px] font-black uppercase tracking-widest ${isPro ? 'text-emerald-600' : 'text-zinc-400'}`}>
+                  {isPro ? 'Premium Suite' : 'Free Version'}
+                </p>
               </div>
-              <div className="w-11 h-11 rounded-2xl overflow-hidden border-2 border-white shadow-lg ring-1 ring-zinc-200">
+              <div className={`w-11 h-11 rounded-2xl overflow-hidden border-2 shadow-lg ring-1 ${isPro ? 'border-emerald-500 ring-emerald-200' : 'border-white ring-zinc-200'}`}>
                 <img src="https://picsum.photos/seed/architect/100/100" alt="Avatar" referrerPolicy="no-referrer" />
               </div>
             </div>
@@ -347,7 +375,9 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                 >
-                  <LayoutSuggester />
+                  <ProGatedFeature isPro={isPro} onUpgradeClick={() => setIsSubscriptionModalOpen(true)} title="AI Layout Generator">
+                    <LayoutSuggester />
+                  </ProGatedFeature>
                 </motion.div>
               )}
 
@@ -369,7 +399,9 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                 >
-                  <TrendAnalysis rooms={rooms} requirements={requirements} />
+                  <ProGatedFeature isPro={isPro} onUpgradeClick={() => setIsSubscriptionModalOpen(true)} title="Trend Analysis Tool">
+                    <TrendAnalysis rooms={rooms} requirements={requirements} />
+                  </ProGatedFeature>
                 </motion.div>
               )}
 
@@ -380,7 +412,9 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                 >
-                  <MunicipalCompliance rooms={rooms} />
+                  <ProGatedFeature isPro={isPro} onUpgradeClick={() => setIsSubscriptionModalOpen(true)} title="Compliance Checker">
+                    <MunicipalCompliance rooms={rooms} />
+                  </ProGatedFeature>
                 </motion.div>
               )}
 
@@ -391,13 +425,36 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                 >
-                  <MaterialEstimator rooms={rooms} />
+                  <ProGatedFeature isPro={isPro} onUpgradeClick={() => setIsSubscriptionModalOpen(true)} title="Material Estimator">
+                    <MaterialEstimator rooms={rooms} />
+                  </ProGatedFeature>
+                </motion.div>
+              )}
+
+              {activeTab === 'catalog' && (
+                <motion.div
+                  key="catalog"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="h-full"
+                >
+                  <MaterialCatalog isPro={isPro} onUpgradeClick={() => setIsSubscriptionModalOpen(true)} />
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
         </div>
       </main>
+
+      <SubscriptionModal 
+        isOpen={isSubscriptionModalOpen} 
+        onClose={() => setIsSubscriptionModalOpen(false)}
+        onUpgrade={() => {
+          setIsPro(true);
+          setIsSubscriptionModalOpen(false);
+        }}
+      />
 
       <TutorialOverlay isOpen={isTutorialOpen} onClose={() => setIsTutorialOpen(false)} />
     </div>

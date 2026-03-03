@@ -4,7 +4,11 @@ import { LayoutSuggestion } from '../types';
 import { Sparkles, Loader2, Wand2, Ruler, Palette, Lightbulb, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const getAI = () => {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY is not defined");
+  return new GoogleGenAI({ apiKey: key });
+};
 
 export const LayoutSuggester: React.FC = () => {
   const [dimensions, setDimensions] = useState({ width: '', length: '' });
@@ -27,6 +31,7 @@ export const LayoutSuggester: React.FC = () => {
       3. A list of furniture items and their suggested placement.
       4. An explanation of the design choices.`;
 
+      const ai = getAI();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: prompt,
